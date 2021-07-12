@@ -69,11 +69,22 @@ spec:
         - "namenode"
         resources:
 {{ toYaml .Values.nameNode.resources | indent 10 }}
-        
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 50070
+          initialDelaySeconds: 5
+          timeoutSeconds: 2
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 50070
+          initialDelaySeconds: 10
+          timeoutSeconds: 2
         volumeMounts:
         - name: hadoop-config
           mountPath: /tmp/hadoop-config
-        - name: opt
+        - name: dms_volume
           mountPath: /opt
       {{- if .Values.prometheus.exporter.enabled }}
       - name: namenode-exporter
@@ -104,13 +115,13 @@ spec:
           name: {{ include "hdfs.fullname" . }}-namenode-exporter
       {{- end }}
       {{- if not .Values.persistence.nameNode.enabled }}
-      - name: opt
+      - name: dfs
         emptyDir: {}
       {{- end }}
   {{- if .Values.persistence.nameNode.enabled }}
   volumeClaimTemplates:
   - metadata:
-      name: dfs
+      name: dms_volume
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
