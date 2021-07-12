@@ -51,13 +51,13 @@ spec:
         command:
         - /bin/bash
         - -c
-        - chown -R hdfs:hadoop /opt &&
-          chmod g+s /opt
+        - chown -R hdfs:hadoop /dfs &&
+          chmod g+s /dfs
         securityContext:
           runAsUser: 0
         volumeMounts:
-        - mountPath: /opt
-          name: opt
+        - mountPath: /dfs
+          name: dfs
       containers:
       - name: namenode
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -69,18 +69,7 @@ spec:
         - "namenode"
         resources:
 {{ toYaml .Values.nameNode.resources | indent 10 }}
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 50070
-          initialDelaySeconds: 5
-          timeoutSeconds: 2
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 50070
-          initialDelaySeconds: 10
-          timeoutSeconds: 2
+        
         volumeMounts:
         - name: hadoop-config
           mountPath: /tmp/hadoop-config
