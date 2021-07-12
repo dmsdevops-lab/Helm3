@@ -138,4 +138,4 @@ spec:
       storageClassName: "{{ .Values.persistence.nameNode.storageClass }}"
       {{- end }}
       {{- end }}
-  {{- end }}
+  {{- end }
