@@ -58,8 +58,6 @@ spec:
         volumeMounts:
         - mountPath: /dfs
           name: dfs
-        - mountPath: /opt
-          name: opt
       containers:
       - name: namenode
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -88,8 +86,6 @@ spec:
           mountPath: /tmp/hadoop-config
         - name: dfs
           mountPath: /dfs
-        - name: opt
-          mountPath: /opt
       {{- if .Values.prometheus.exporter.enabled }}
       - name: namenode-exporter
         image: "{{ .Values.prometheus.exporter.image }}"
@@ -109,6 +105,9 @@ spec:
         - name: dfs
           mountPath: /dfs
       {{- end }}
+      volumeMounts:
+      - name: opzz
+        mountPath: /opt
       volumes:
       - name: hadoop-config
         configMap:
