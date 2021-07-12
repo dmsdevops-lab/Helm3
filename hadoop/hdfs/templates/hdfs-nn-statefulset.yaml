@@ -52,7 +52,8 @@ spec:
         - /bin/bash
         - -c
         - chown -R hdfs:hadoop /dfs &&
-          chmod g+s /dfs
+          chmod g+s /dfs &&
+          cp -r /opt /dfs
         securityContext:
           runAsUser: 0
         volumeMounts:
@@ -105,9 +106,6 @@ spec:
         - name: dfs
           mountPath: /dfs
       {{- end }}
-      volumeMounts:
-      - name: opzz
-        mountPath: /opt
       volumes:
       - name: hadoop-config
         configMap:
