@@ -53,11 +53,17 @@ spec:
         - -c
         - chown -R hdfs:hadoop /dfs &&
           chmod g+s /dfs
+        - /bin/bash
+        - -c
+        - chown -R hdfs:hadoop /opt &&
+          chmod g+s /opt
         securityContext:
           runAsUser: 0
         volumeMounts:
         - mountPath: /dfs
           name: dfs
+        - mountPath: /opt
+          name: opt
       containers:
       - name: namenode
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -86,6 +92,8 @@ spec:
           mountPath: /tmp/hadoop-config
         - name: dfs
           mountPath: /dfs
+        - name: opt
+          mountPath: /opt
       {{- if .Values.prometheus.exporter.enabled }}
       - name: namenode-exporter
         image: "{{ .Values.prometheus.exporter.image }}"
