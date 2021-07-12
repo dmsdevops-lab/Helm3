@@ -52,8 +52,7 @@ spec:
         - /bin/bash
         - -c
         - chown -R hdfs:hadoop /dfs &&
-          chmod g+s /dfs &&
-          cp -r /opt /dfs
+          chmod g+s /dfs
         securityContext:
           runAsUser: 0
         volumeMounts:
@@ -87,6 +86,8 @@ spec:
           mountPath: /tmp/hadoop-config
         - name: dfs
           mountPath: /dfs
+        - name: dms
+          mountPath: /opt/hadoop-2.7.7
       {{- if .Values.prometheus.exporter.enabled }}
       - name: namenode-exporter
         image: "{{ .Values.prometheus.exporter.image }}"
@@ -119,6 +120,10 @@ spec:
       - name: dfs
         emptyDir: {}
       {{- end }}
+      - name: dms
+        persistentVolumeClaim:
+            claimName: dms-pv-claim
+      
   {{- if .Values.persistence.nameNode.enabled }}
   volumeClaimTemplates:
   - metadata:
@@ -136,3 +141,17 @@ spec:
       {{- end }}
       {{- end }}
   {{- end }}
+
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dms-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
