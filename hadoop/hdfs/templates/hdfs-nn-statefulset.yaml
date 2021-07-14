@@ -120,9 +120,9 @@ spec:
       - name: dfs
         emptyDir: {}
       {{- end }}
-      - name: dms
-        persistentVolumeClaim:
-            claimName: dms-pv-claim
+   #   - name: dms
+    #    persistentVolumeClaim:
+     #       claimName: dms-pv-claim
       
   {{- if .Values.persistence.nameNode.enabled }}
   volumeClaimTemplates:
