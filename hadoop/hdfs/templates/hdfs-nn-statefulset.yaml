@@ -84,8 +84,8 @@ spec:
         volumeMounts:
         - name: hadoop-config
           mountPath: /tmp/hadoop-config
-     #   - name: dfs
-     #     mountPath: /dfs
+        - name: dfs
+          mountPath: /dfs
         - name: dms
           mountPath: /opt/hadoop-3.2.1/etc/hadoop/
       {{- if .Values.prometheus.exporter.enabled }}
@@ -104,8 +104,8 @@ spec:
           mountPath: /tmp/hadoop-config
         - name: config-exporter
           mountPath: /exporter
-        - name: dms
-          mountPath: /opt/hadoop-3.2.1/etc/hadoop/
+        - name: dfs
+          mountPath: /dfs
       {{- end }}
       volumes:
       - name: hadoop-config
@@ -125,6 +125,22 @@ spec:
         emptyDir: {}
    {{- end }}   
   {{- if .Values.persistence.nameNode.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: dfs
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: "{{ .Values.persistence.nameNode.size }}"
+      {{- if .Values.persistence.nameNode.storageClass }}
+      {{- if (eq "-" .Values.persistence.nameNode.storageClass) }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: "{{ .Values.persistence.nameNode.storageClass }}"
+      {{- end }}
+      {{- end }}
+      
   volumeClaimTemplates:
   - metadata:
       name: dms
