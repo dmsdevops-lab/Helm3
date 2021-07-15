@@ -86,8 +86,8 @@ spec:
           mountPath: /tmp/hadoop-config
         - name: dfs
           mountPath: /dfs
-       # - name: dms
-       #   mountPath: /opt/hadoop-3.2.1/etc/hadoop/
+        - name: dms
+          mountPath: /opt/hadoop-3.2.1/etc/hadoop/
       {{- if .Values.prometheus.exporter.enabled }}
       - name: namenode-exporter
         image: "{{ .Values.prometheus.exporter.image }}"
@@ -127,7 +127,7 @@ spec:
   {{- if .Values.persistence.nameNode.enabled }}
   volumeClaimTemplates:
   - metadata:
-      name: dfs
+      name: dms
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
