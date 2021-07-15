@@ -84,8 +84,8 @@ spec:
         volumeMounts:
         - name: hadoop-config
           mountPath: /tmp/hadoop-config
-        - name: dfs
-          mountPath: /dfs
+     #   - name: dfs
+     #     mountPath: /dfs
         - name: dms
           mountPath: /opt/hadoop-3.2.1/etc/hadoop/
       {{- if .Values.prometheus.exporter.enabled }}
@@ -104,8 +104,8 @@ spec:
           mountPath: /tmp/hadoop-config
         - name: config-exporter
           mountPath: /exporter
-        - name: dfs
-          mountPath: /dfs
+        - name: dms
+          mountPath: /opt/hadoop-3.2.1/etc/hadoop/
       {{- end }}
       volumes:
       - name: hadoop-config
